@@ -7,11 +7,15 @@ import {
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import * as Animatable from 'react-native-animatable';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import { RNCamera } from 'react-native-camera';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
+
+  // console.log(RNCamera.Constants.FlashMode.torch);
+  // flashMode={RNCamera.Constants.FlashMode.torch}
   const makeSlideOutTranslation = (translationType, fromValue) => {
     return {
       from: {
@@ -30,7 +34,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
         onRead={d => {
           setBarcode(d.data);
         }}
-
+        
         cameraStyle={{ height: SCREEN_HEIGHT - 200 }}
         customMarker={
           <View style={styles.rectangleContainer}>
@@ -128,7 +132,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
 const overlayColor = ''; // this gives us a black color with a 50% transparency
 
 const rectDimensions = SCREEN_WIDTH * 0.85; // this is equivalent to 255 from a 393 device width
-const rectBorderWidth = SCREEN_WIDTH * 0.016; // this is equivalent to 2 from a 393 device width
+const rectBorderWidth = SCREEN_WIDTH * 0.010; // this is equivalent to 2 from a 393 device width
 const rectBorderColor = '#0FFF50';
 
 const scanBarWidth = SCREEN_WIDTH * 0.7; // this is equivalent to 180 from a 393 device width
