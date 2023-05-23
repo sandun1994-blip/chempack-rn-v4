@@ -35,7 +35,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
           setBarcode(d.data);
         }}
         
-        cameraStyle={{ height: SCREEN_HEIGHT - 200 }}
+        cameraStyle={{ height: SCREEN_HEIGHT  }}
         customMarker={
           <View style={styles.rectangleContainer}>
             <View style={styles.topOverlay}>
@@ -74,9 +74,9 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
         style={{
           width: '100%',
           backgroundColor: '#FFFFFF',
-          height: 125,
+          height: 100,
           position: 'absolute',
-          bottom: '-24%',
+          bottom: 0,
           justifyContent: 'space-around',
           alignItems: 'center',
           flexDirection:'row'
@@ -142,10 +142,10 @@ const scanBarColor = 'white';
 const styles = StyleSheet.create({
   rectangleContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
-    paddingTop: 100,
+    marginTop: -60,
   },
   rectangle: {
     height: SCREEN_HEIGHT - 350,

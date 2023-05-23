@@ -5,10 +5,8 @@ import Consignment from '../pages/Consignment';
 const ScanScreen = () => {
   const {direction, setDirection} = useDataContext();
   return (
-    <View style={{width:'100%',height:'100%'}}>
-      
-        <Consignment />
-      
+    <View style={{width: '100%', height: '100%'}}>
+      <Consignment />
     </View>
   );
 };

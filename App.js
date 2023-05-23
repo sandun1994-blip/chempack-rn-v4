@@ -47,9 +47,9 @@ const requestCameraPermission = async () => {
 
 export default function App() {
 
-  React.useEffect(() => {
-    requestCameraPermission()
-  }, [])
+  // React.useEffect(() => {
+  //   requestCameraPermission()
+  // }, [])
   
   return (
     <ContextProvider>
