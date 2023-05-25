@@ -4,8 +4,13 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import HomeMap from '../components/HomeMap';
 import Message from '../components/Message';
 import HomeSearch from '../components/HomeSearch';
+//import {CheckAuth} from '../lib';
+import {useDataContext} from '../hooks/hooks';
+
 
 const HomeScreen = () => {
+  const {setAuth, auth} = useDataContext();
+
   const androidPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -23,8 +28,13 @@ const HomeScreen = () => {
     }
   };
 
+
+
+
   useEffect(() => {
+    console.log('render');
     androidPermission();
+    // CheckAuth(setAuth, auth);
   }, []);
   return (
     <ScreenWrapper>
@@ -37,4 +47,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default HomeScreen ;

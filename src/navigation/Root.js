@@ -4,6 +4,9 @@ import AppNavigation from './AppNavigation';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Text, View} from 'react-native';
 import CustomDrawer from './CustomDrawer';
+import {LocalTile} from 'react-native-maps';
+import LoginNavigation from './LoginNavigation';
+import {useDataContext} from '../hooks/hooks';
 
 const Drawer = createDrawerNavigator();
 
@@ -14,7 +17,9 @@ const DummyScreen = props => (
 );
 
 const Root = () => {
-  const user = true;
+  const {auth, setAuth, setIsLoading, setUserToken} = useDataContext();
+
+  const user = auth?.accessToken;
   return (
     <NavigationContainer>
       {user ? (
@@ -37,7 +42,7 @@ const Root = () => {
           </Drawer.Screen>
         </Drawer.Navigator>
       ) : (
-        <AppNavigation />
+        <LoginNavigation />
       )}
     </NavigationContainer>
   );

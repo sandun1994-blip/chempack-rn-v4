@@ -2,6 +2,7 @@ import {View, Text, SafeAreaView, ScrollView} from 'react-native';
 import React from 'react';
 import {useDataContext} from '../hooks/hooks';
 import Consignment from '../pages/Consignment';
+import CheckAuth from '../protectedRoute';
 const ScanScreen = () => {
   const {direction, setDirection} = useDataContext();
   return (
@@ -11,4 +12,4 @@ const ScanScreen = () => {
   );
 };
 
-export default ScanScreen;
+export default ScanScreen

@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
-import React, { createContext, useState } from 'react'
-
+import React, { createContext, useEffect, useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Context = createContext()
 
@@ -21,6 +21,35 @@ const ContextProvider = ({children}) => {
     const [refernceArray, setRefernceArray] = useState([]);
     const [getBarcodeData, setGetBarcodeData] = useState({});
 
+    const logout =()=>{
+      AsyncStorage.removeItem('userToken')
+      setUserToken(null)
+      setAuth({...auth,accessToken:null}) }
+
+      const isLoginIn =async()=>{
+        setIsLoading(true)
+        try {
+          const tokenInfo =await AsyncStorage.getItem('userToken')
+          const userInfo =await AsyncStorage.getItem('username')
+         
+          if (tokenInfo) {
+            setAuth({...auth,accessToken:tokenInfo,username:userInfo})
+          }
+         
+        } catch (error) {
+          
+        }
+        setIsLoading(false)
+      }
+
+      useEffect(()=>{
+        let mount =true
+        if (mount) {
+          isLoginIn()
+        }
+        return ()=>{mount=false}
+      },[])
+     
   return (
     <Context.Provider value={{auth, setAuth, po, setPo,isLoading,
        setIsLoading,userToken, setUserToken,userRefreshToken, 
@@ -29,7 +58,7 @@ const ContextProvider = ({children}) => {
       direction,setDirection,refernceCode, setRefernceCode,
       refernceScanCode, setRefernceScanCode,refernceScanCodeDisplay, 
       setRefernceScanCodeDisplay,barcode, setBarcode,refernceArray, 
-      setRefernceArray,getBarcodeData, setGetBarcodeData}}>
+      setRefernceArray,getBarcodeData, setGetBarcodeData,logout}}>
     {children}
     </Context.Provider>
      

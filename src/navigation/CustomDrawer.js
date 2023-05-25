@@ -4,7 +4,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import Test from '../test';
+
 
 const CustomDrawer = props => {
   const handleLogout = () => {};
