@@ -57,51 +57,49 @@ export default function SignInScreen({navigation}) {
   };
 
   return (
-    <ScreenWrapper>
-      <View className="flex justify-between h-full mx-4">
-        <View>
-          <View className="flex-row justify-center my-3 mt-5">
-            <Image
-              className="h-80 w-80"
-              source={require('../../assets/images/login.png')}
-            />
-          </View>
-          <View className="space-y-2 mx-2">
-            <Text className={`${colors.heading} text-lg font-bold`}>
-              User Name
-            </Text>
-            <TextInput
-              value={username}
-              onChangeText={value => setUsername(value)}
-              className="p-4 bg-white rounded-full mb-3"
-            />
-            <Text className={`${colors.heading} text-lg font-bold`}>
-              Password
-            </Text>
-            <TextInput
-              value={password}
-              secureTextEntry
-              onChangeText={value => setPassword(value)}
-              className="p-4 bg-white rounded-full mb-3"
-            />
-          </View>
+    <View className="flex justify-between  mx-4" style={{flex: 1}}>
+      <View style={{flex: 1}}>
+        <View className="flex-row justify-center my-3 mt-5" style={{flex: 1}}>
+          <Image
+            className="h-60 w-80"
+            source={require('../../assets/images/login.png')}
+          />
         </View>
-
-        <View>
-          {userLoading ? (
-            <Loading />
-          ) : (
-            <TouchableOpacity
-              onPress={handleSubmit}
-              style={{backgroundColor: colors.button}}
-              className="my-6 rounded-full p-3 shadow-sm mx-2">
-              <Text className="text-center text-white text-lg font-bold">
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          )}
+        <View className="space-y-2 mx-2" style={{flex: 1}}>
+          <Text className={`${colors.heading} text-lg font-bold`}>
+            User Name
+          </Text>
+          <TextInput
+            value={username}
+            onChangeText={value => setUsername(value)}
+            className="p-4 bg-white rounded-full mb-3"
+          />
+          <Text className={`${colors.heading} text-lg font-bold`}>
+            Password
+          </Text>
+          <TextInput
+            value={password}
+            secureTextEntry
+            onChangeText={value => setPassword(value)}
+            className="p-4 bg-white rounded-full mb-3"
+          />
         </View>
       </View>
-    </ScreenWrapper>
+
+      <View>
+        {userLoading ? (
+          <Loading />
+        ) : (
+          <TouchableOpacity
+            onPress={handleSubmit}
+            style={{backgroundColor: colors.button}}
+            className="my-6 rounded-full p-3 shadow-sm mx-2">
+            <Text className="text-center text-white text-lg font-bold">
+              Sign In
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 }

@@ -7,6 +7,7 @@ import CustomDrawer from './CustomDrawer';
 import {LocalTile} from 'react-native-maps';
 import LoginNavigation from './LoginNavigation';
 import {useDataContext} from '../hooks/hooks';
+import SplashNavigation from './SplashNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,15 +18,31 @@ const DummyScreen = props => (
 );
 
 const Root = () => {
-  const {auth, setAuth, setIsLoading, setUserToken} = useDataContext();
+  const {auth, setAuth, isLoadingTwo, setUserToken} = useDataContext();
 
   const user = auth?.accessToken;
+
   return (
     <NavigationContainer>
-      {user ? (
-        <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
-          <Drawer.Screen name="Route Direction" component={AppNavigation} />
-          <Drawer.Screen name="Your Trips">
+      {isLoadingTwo ? (
+        <SplashNavigation />
+      ) : user ? (
+        <Drawer.Navigator
+          drawerContent={props => <CustomDrawer {...props} />}
+          // screenOptions ={{
+          //   drawerStyle: {
+          //     backgroundColor: 'red',
+          //     width: 240,
+          //   },
+          // }}
+        >
+          <Drawer.Screen
+            name="Route Direction"
+            component={AppNavigation}
+            options={{headerShown: true,headerTitle:'f'}}
+            
+          />
+          <Drawer.Screen name="Your Trips" options={{headerShown: false,}}>
             {() => <DummyScreen name={'Your Trips'} />}
           </Drawer.Screen>
 

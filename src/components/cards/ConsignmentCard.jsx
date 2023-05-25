@@ -14,6 +14,7 @@ import {
 import React, {useEffect} from 'react';
 import { useDataContext } from '../../hooks/hooks';
 import axios from 'axios'
+import ScanData from '../ScanData';
 
 
 const requestStoragePermission = async () => {
@@ -278,6 +279,8 @@ const ConsignmentCard = ({
   return (
     <>
    <View style={{marginRight: 15, marginLeft: 15, paddingBottom: 100}}>
+
+    <ScanData/>
 
         {isLoading && (
           <View

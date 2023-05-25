@@ -58,7 +58,7 @@ const Consignment = ({userLocation, navigation}) => {
     setIsLoading(true);
     try {
       const res = await axios.get(
-        `http://com.au:3000/machship/searchConsignments/${barcode}`,
+        `http://scan.chem-pack.com.au:3000/machship/searchConsignments/${barcode}`,
         {
           headers: {
             'content-Type': 'application/json',
@@ -115,33 +115,33 @@ const Consignment = ({userLocation, navigation}) => {
       )}
       {camShow && <Camera setCamShow={setCamShow} setImage={setImage} />}
       {!scanOneShow && (
-        <ScrollView className="bg-red-400">
-          <View className="bg-red-700  pt-6">
-            <View style={styles.scanInputContainer}>
-              <TextInput
-                placeholder="Consignment Id"
-                style={styles.barcodeTextBox}
-                onChangeText={e => setBarcode(e)}
-                value={barcode}
+        <View className="bg-red-700  pt-6 pb-6">
+          <View style={styles.scanInputContainer}>
+            <TextInput
+              placeholder="Consignment Id"
+              style={styles.barcodeTextBox}
+              onChangeText={e => setBarcode(e)}
+              value={barcode}
+            />
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                console.log(barcode);
+                setScanOneShow(true);
+                setBarcode('');
+              }}>
+              <MaterialCommunityIcons
+                name={'barcode-scan'}
+                size={30}
+                color="black"
               />
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  console.log(barcode);
-                  setScanOneShow(true);
-                  setBarcode('');
-                }}>
-                <MaterialCommunityIcons
-                  name={'barcode-scan'}
-                  size={30}
-                  color="black"
-                />
-              </TouchableOpacity>
-            </View>
-            <Text>{barcode}</Text>
+            </TouchableOpacity>
           </View>
-
+        </View>
+      )}
+      {!scanOneShow && (
+        <ScrollView className="bg-red-400">
           <ConsignmentCard
             barcode={barcode}
             status={status}

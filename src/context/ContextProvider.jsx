@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import jwt_decode from 'jwt-decode';
 import React, { createContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -8,7 +8,8 @@ const ContextProvider = ({children}) => {
   const [direction,setDirection] =useState('Start')
     const [auth, setAuth] = useState({});
     const [po, setPo] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingTwo, setIsLoadingTwo] = useState(false)
     const [userToken, setUserToken] = useState(null)
     const [userRefreshToken, setUserRefreshToken] = useState(null)
     const [userInfo, setUserInfo] = useState(null)
@@ -27,19 +28,29 @@ const ContextProvider = ({children}) => {
       setAuth({...auth,accessToken:null}) }
 
       const isLoginIn =async()=>{
-        setIsLoading(true)
+        setIsLoadingTwo(true)
         try {
           const tokenInfo =await AsyncStorage.getItem('userToken')
           const userInfo =await AsyncStorage.getItem('username')
-         
+
+         console.log(tokenInfo,'tokenInfo');
           if (tokenInfo) {
-            setAuth({...auth,accessToken:tokenInfo,username:userInfo})
-          }
-         
-        } catch (error) {
-          
+            
+    let decodedToken = jwt_decode(tokenInfo);
+    let currentDate = new Date();
+    
+    if (decodedToken.exp * 1000 < currentDate.getTime()) {
+      console.log(1);
+      setAuth({...auth, accessToken: null});
+      AsyncStorage.removeItem('userToken');
+    }else{
+      console.log(2);
+      setAuth({...auth,accessToken:tokenInfo,username:userInfo})
+    } }
+      } catch (error) {
+          console.log(error,'yo');
         }
-        setIsLoading(false)
+        setIsLoadingTwo(false)
       }
 
       useEffect(()=>{
@@ -58,7 +69,7 @@ const ContextProvider = ({children}) => {
       direction,setDirection,refernceCode, setRefernceCode,
       refernceScanCode, setRefernceScanCode,refernceScanCodeDisplay, 
       setRefernceScanCodeDisplay,barcode, setBarcode,refernceArray, 
-      setRefernceArray,getBarcodeData, setGetBarcodeData,logout}}>
+      setRefernceArray,getBarcodeData, setGetBarcodeData,logout,isLoadingTwo}}>
     {children}
     </Context.Provider>
      

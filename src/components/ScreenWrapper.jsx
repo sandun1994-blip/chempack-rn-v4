@@ -15,10 +15,7 @@ export default function ScreenWrapper({children}) {
     
   return (
     <View >
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+     <StatusBar barStyle = "dark-content" hidden = {false} backgroundColor = "#00BCD4" translucent = {true}/>
         {children}
         </View>
       
