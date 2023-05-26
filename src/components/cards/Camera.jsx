@@ -22,13 +22,11 @@ const Camera = ({setImage, setCamShow}) => {
       const filePath = data.uri;
 
       const newFilePath = RNFS.DownloadDirectoryPath + `/${uuid.v4()}.jpg`;
-      console.log(filePath);
+      //console.log(filePath);
       // console.log(RNFS.ExternalStorageDirectoryPath);
       setImage(data.base64);
       RNFS.moveFile(filePath, newFilePath)
-        .then(url => {
-          console.log(1, url);
-        })
+        .then(() => { })
         .catch(err => console.log(err));
       setCamShow(false);
 

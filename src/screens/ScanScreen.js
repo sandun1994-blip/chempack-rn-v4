@@ -1,15 +1,16 @@
-import {View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import React from 'react';
 import {useDataContext} from '../hooks/hooks';
 import Consignment from '../pages/Consignment';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const ScanScreen = () => {
   const {direction, setDirection} = useDataContext();
   return (
-    <View style={{width: '100%', height: '100%'}}>
+    <SafeAreaView className="bg-white flex-1">
       <Consignment />
-    </View>
+    </SafeAreaView>
   );
 };
 
-export default ScanScreen
+export default ScanScreen;

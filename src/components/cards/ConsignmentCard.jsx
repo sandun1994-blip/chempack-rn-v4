@@ -11,7 +11,7 @@ import {
   PermissionsAndroid,
 
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useDataContext } from '../../hooks/hooks';
 import axios from 'axios'
 import ScanData from '../ScanData';
@@ -20,7 +20,7 @@ import ScanData from '../ScanData';
 const requestStoragePermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE );
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
     // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
     //   console.log('You can use the camera');
     // } else {
@@ -34,6 +34,7 @@ const requestStoragePermission = async () => {
 
 
 const ConsignmentCard = ({
+  setMainScanshow,
   barcode,
   status,
   userLocation,
@@ -58,7 +59,7 @@ const ConsignmentCard = ({
 
 
 
-    useEffect(() => {
+  useEffect(() => {
     requestStoragePermission()
   }, [])
 
@@ -136,7 +137,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
         setTimeout(() => {
           navigation.navigate('RouteDirection');
@@ -161,7 +162,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
       }
       setIsLoading(false);
@@ -206,7 +207,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
         setTimeout(() => {
           navigation.navigate('RouteDirection');
@@ -231,7 +232,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
       }
       setIsLoading(false);
@@ -252,7 +253,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
       } else {
         showMessage({
@@ -269,7 +270,7 @@ const ConsignmentCard = ({
             justifyContent: 'center',
             alignItems: 'center',
           },
-          titleStyle: {fontFamily: 'Teko', fontSize: 16},
+          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
         });
       }
     }
@@ -278,118 +279,35 @@ const ConsignmentCard = ({
 
   return (
     <>
-   <View style={{marginRight: 15, marginLeft: 15, paddingBottom: 100}}>
 
-    <ScanData/>
 
-        {isLoading && (
-          <View
-            style={{
-              margin: 10,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={styles.indicatorText}>Loading Data...</Text>
-            <ActivityIndicator
-              size={'small'}
-              style={styles.indicator}
-              color="yellow"
-            />
-          </View>
-        )}
 
-        {getBarcodeData?.toAddressLine1 && (
-          <View style={{marginLeft: 20}}>
-            <Text style={{fontSize: 18, fontFamily: 'Teko'}}>
-              {getBarcodeData.toAddressLine1},
-            </Text>
-            <Text style={{fontSize: 18, fontFamily: 'Teko', paddingBottom: 10}}>
-              {getBarcodeData.toAddressLine2}
-            </Text>
-          </View>
-        )}
 
-        {getBarcodeData?.qty && (
-          <View
-            style={{
-              marginBottom: 5,
-              marginLeft: 20,
-              fontSize: 20,
-              fontFamily: 'Teko',
-            }}>
-            <Text style={{color: 'yellow', fontFamily: 'Teko', fontSize: 18}}>
-              Qty : {refernceArray.filter(item => item.selected).length} of{' '}
-              {getBarcodeData?.qty}
-            </Text>
-          </View>
-        )}
-        {refernceArray.length > 0 && (
-          <View style={{paddingBottom: 10}}>
-            {refernceArray.map((item, i) => (
-              <View
-                key={i}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  marginLeft: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'white', fontWeight: '900'}}>
-                  {item.id}
-                </Text>
-               
-              </View>
-            ))}
-          </View>
-        )}
-
-     
-
-        <View>
-          <View style={{marginBottom: 0, marginLeft: 20, fontFamily: 'Teko'}}>
-            {getBarcodeData?.consignmentId && (
-              <Text style={{color: 'black', fontFamily: 'Teko', fontSize: 18}}>
-                Consignment Id : {getBarcodeData?.consignmentId}
-              </Text>
-            )}
-          </View>
+      {isLoading && (
+        <View
+          style={{
+            margin: 10,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.indicatorText}>Loading Data...</Text>
+          <ActivityIndicator
+            size={'small'}
+            style={styles.indicator}
+            color="yellow"
+          />
         </View>
-
-        {singedShow && (
-          <View style={styles.containerCamera}>
-            <TouchableOpacity
-              style={{
-                height: 40,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                margin: 5,
-              }}
-              onPress={() => setCamShow(!camShow)}>
-              <Entypo name="camera" size={28} color="white" />
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  color: 'black',
-                  marginLeft: 20,
-                  color: 'white',
-                }}>
-                Click here to take a photo
-              </Text>
-            </TouchableOpacity>
-            {image && (
-              <Image
-                source={{uri: 'data:image/jpg;base64,' + image.base64}}
-                style={{width: 300, height: 200, borderRadius: 10}}
-              />
-            )}
-          </View>
-        )}
-       
-      </View>
+      )}
+      <ScanData getBarcodeData={getBarcodeData} 
+      singedShow={singedShow}
+       refernceArray={refernceArray}
+        setRefernceArray={setRefernceArray} 
+        image={image}
+         references={references} 
+        setReferences={setReferences}
+        setMainScanshow={setMainScanshow} 
+        />
 
 
     </>
@@ -500,6 +418,6 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
   },
- 
-  
+
+
 });

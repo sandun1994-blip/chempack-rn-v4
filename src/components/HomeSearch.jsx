@@ -1,5 +1,5 @@
 import React from "react";
-import {Pressable, StyleSheet, Text, View} from "react-native";
+import {Pressable, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -8,7 +8,7 @@ import { useDataContext } from "../hooks/hooks";
 
 export default function HomeSearch() {
 
-  const { direction, setDirection } = useDataContext()
+  const { setDirection } = useDataContext()
 
   const navigation = useNavigation();
   const goToSearch = (dir) => {
@@ -26,24 +26,24 @@ export default function HomeSearch() {
           <Entypo name={"location-pin"} size={20} />
         </View>
       </Pressable>
-      <Pressable  onPress={()=>goToSearch('Start')} >
+      <TouchableOpacity  onPress={()=>goToSearch('Start')} >
       <View style={styles.row}>
         <View style={[styles.iconContainer, {backgroundColor: "green"}]}>
-        <FontAwesome name={"location-arrow"} size={16} color={"#ffffff"} />
+        <FontAwesome name={"location-arrow"} size={16} color={"white"} />
         </View>
 
         <Text style={styles.destinationText} >START</Text>
       </View>
-      </Pressable>
-      <Pressable  onPress={()=>goToSearch('End')} className='mt-2' >
+      </TouchableOpacity>
+      <TouchableOpacity  onPress={()=>goToSearch('End')} className='mt-2' >
       <View style={styles.row}>
         <View style={[styles.iconContainer, {backgroundColor: "#285180"}]}>
-          <FontAwesome name={"location-arrow"} size={16} color={"#ffffff"} />
+          <FontAwesome name={"location-arrow"} size={16} color={"white"} />
         </View>
 
         <Text style={styles.destinationText}>END</Text>
       </View>
-      </Pressable>
+      </TouchableOpacity>
     </>
   );
 }
@@ -51,7 +51,7 @@ export default function HomeSearch() {
 const styles = StyleSheet.create({
   inputBox: {
     backgroundColor: "#b0b0b0",
-    margin: 3,
+    margin: 1,
     padding: 10,
     flexDirection: "row",
     justifyContent: "space-between",

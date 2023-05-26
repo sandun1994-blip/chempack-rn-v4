@@ -33,18 +33,18 @@ const ContextProvider = ({children}) => {
           const tokenInfo =await AsyncStorage.getItem('userToken')
           const userInfo =await AsyncStorage.getItem('username')
 
-         console.log(tokenInfo,'tokenInfo');
+        
           if (tokenInfo) {
             
     let decodedToken = jwt_decode(tokenInfo);
     let currentDate = new Date();
     
     if (decodedToken.exp * 1000 < currentDate.getTime()) {
-      console.log(1);
+     
       setAuth({...auth, accessToken: null});
       AsyncStorage.removeItem('userToken');
     }else{
-      console.log(2);
+      
       setAuth({...auth,accessToken:tokenInfo,username:userInfo})
     } }
       } catch (error) {

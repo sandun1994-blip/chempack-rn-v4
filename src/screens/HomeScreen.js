@@ -25,7 +25,7 @@ const HomeScreen = () => {
   }, []);
   return (
     <ScreenWrapper>
-      <View style={{height: Dimensions.get('window').height - 400}}>
+      <View style={{height: Dimensions.get('window').height - 390}}>
         <HomeMap />
       </View>
       <Message />

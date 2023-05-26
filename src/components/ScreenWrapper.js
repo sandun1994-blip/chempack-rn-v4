@@ -11,7 +11,7 @@ export default function ScreenWrapper({children}) {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" hidden={false} translucent={true} />
+      <StatusBar barStyle="" hidden={false} translucent={true} />
 
       {children}
     </>

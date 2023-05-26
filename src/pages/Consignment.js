@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Scaner from '../components/Scaner';
@@ -49,10 +50,10 @@ const Consignment = ({userLocation, navigation}) => {
   // const [type, setType] = useState(CameraType.back);
 
   const [camShow, setCamShow] = useState(false);
-  const [image, setImage] = useState(null);
   const [signedBy, setSignedBy] = useState(null);
   const [references, setReferences] = useState([]);
   const [consignmentIndex, setConsignmentIndex] = useState(0);
+  const [mainScanshow, setMainScanshow] = useState(true);
 
   const getBarcodeDetails = async () => {
     setIsLoading(true);
@@ -90,6 +91,8 @@ const Consignment = ({userLocation, navigation}) => {
         toAddressLine2: obj?.toAddressLine2,
         qty: obj?.consignmentItems[0]?.quantity,
       });
+      setScanOneShow(false);
+      setMainScanshow(false)
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +107,7 @@ const Consignment = ({userLocation, navigation}) => {
 
   return (
     <>
-      {!barcode && scanOneShow && (
+      {!barcode && scanOneShow && mainScanshow && (
         <View style={styles.barcodeContainer}>
           <Scaner
             barcode={barcode}
@@ -113,9 +116,9 @@ const Consignment = ({userLocation, navigation}) => {
           />
         </View>
       )}
-      {camShow && <Camera setCamShow={setCamShow} setImage={setImage} />}
-      {!scanOneShow && (
-        <View className="bg-red-700  pt-6 pb-6">
+      {/* {camShow && <Camera setCamShow={setCamShow} setImage={setImage} />} */}
+      {!scanOneShow && mainScanshow && (
+        <View className="bg-[#00CCBB]  pt-5 pb-5">
           <View style={styles.scanInputContainer}>
             <TextInput
               placeholder="Consignment Id"
@@ -127,7 +130,6 @@ const Consignment = ({userLocation, navigation}) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                console.log(barcode);
                 setScanOneShow(true);
                 setBarcode('');
               }}>
@@ -140,36 +142,34 @@ const Consignment = ({userLocation, navigation}) => {
           </View>
         </View>
       )}
-      {!scanOneShow && (
-        <ScrollView className="bg-red-400">
-          <ConsignmentCard
-            barcode={barcode}
-            status={status}
-            setStatus={setStatus}
-            rd={rd}
-            setRd={setRd}
-            userLocation={userLocation}
-            showMessage={showMessage}
-            navigation={navigation}
-            getBarcodeData={getBarcodeData}
-            setGetBarcodeData={setGetBarcodeData}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            mainScanerDisplay={mainScanerDisplay}
-            setMainScanerDisplay={setMainScanerDisplay}
-            camShow={camShow}
-            setCamShow={setCamShow}
-            image={image}
-            setImage={setImage}
-            camera={camera}
-            signedBy={signedBy}
-            setSignedBy={setSignedBy}
-            references={references}
-            setReferences={setReferences}
-            consignmentIndex={consignmentIndex}
-          />
-        </ScrollView>
+      {refernceArray.length > 0 && (
+        <ConsignmentCard
+          setMainScanshow={setMainScanshow}
+          barcode={barcode}
+          status={status}
+          setStatus={setStatus}
+          rd={rd}
+          setRd={setRd}
+          userLocation={userLocation}
+          showMessage={showMessage}
+          navigation={navigation}
+          getBarcodeData={getBarcodeData}
+          setGetBarcodeData={setGetBarcodeData}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          mainScanerDisplay={mainScanerDisplay}
+          setMainScanerDisplay={setMainScanerDisplay}
+          camShow={camShow}
+          setCamShow={setCamShow}
+          camera={camera}
+          signedBy={signedBy}
+          setSignedBy={setSignedBy}
+          references={references}
+          setReferences={setReferences}
+          consignmentIndex={consignmentIndex}
+        />
       )}
+
       <FlashMessage position="bottom" />
     </>
   );
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   barcodeContainer: {
     height: '100%',
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     alignItems: 'center',
     marginTop: 0,
     justifyContent: 'space-between',
