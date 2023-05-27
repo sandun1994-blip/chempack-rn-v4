@@ -1,13 +1,8 @@
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
-  Button,
-  Image,
   PermissionsAndroid,
 
 } from 'react-native';
@@ -43,18 +38,10 @@ const ConsignmentCard = ({
   isLoading,
   setIsLoading,
   navigation,
-  mainScanerDisplay,
-  setMainScanerDisplay,
   image,
-  setImage,
-  setCamShow,
-  camShow,
-  camera,
   signedBy,
-  setSignedBy,
   references,
   setReferences,
-  consignmentIndex,
 }) => {
 
 
@@ -67,7 +54,6 @@ const ConsignmentCard = ({
 
   const {
     direction,
-    setDirection,
     auth,
     setRefernceCode,
     setRefernceScanCode,
@@ -80,18 +66,7 @@ const ConsignmentCard = ({
   const directionTitle = direction === 'End' ? 'END' : 'START';
 
 
-  const onChangeValue = (item, index) => {
-    const newData = refernceArray.map(newItem => {
-      if (newItem.id == item.id) {
-        return {
-          ...newItem,
-          selected: !item.selected,
-        };
-      }
-      return newItem;
-    });
-    setRefernceArray(newData);
-  };
+
 
 
   const handleSubmit = async () => {
@@ -299,15 +274,15 @@ const ConsignmentCard = ({
           />
         </View>
       )}
-      <ScanData getBarcodeData={getBarcodeData} 
-      singedShow={singedShow}
-       refernceArray={refernceArray}
-        setRefernceArray={setRefernceArray} 
+      <ScanData getBarcodeData={getBarcodeData}
+        singedShow={singedShow}
+        refernceArray={refernceArray}
+        setRefernceArray={setRefernceArray}
         image={image}
-         references={references} 
+        references={references}
         setReferences={setReferences}
-        setMainScanshow={setMainScanshow} 
-        />
+        setMainScanshow={setMainScanshow}
+      />
 
 
     </>

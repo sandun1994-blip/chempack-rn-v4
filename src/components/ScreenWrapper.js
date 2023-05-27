@@ -1,14 +1,7 @@
 import React from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {StatusBar} from 'react-native';
 
 export default function ScreenWrapper({children}) {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
     <>
       <StatusBar barStyle="" hidden={false} translucent={true} />

@@ -4,11 +4,8 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import HomeMap from '../components/HomeMap';
 import Message from '../components/Message';
 import HomeSearch from '../components/HomeSearch';
-import {useDataContext} from '../hooks/hooks';
 
 const HomeScreen = () => {
-  const {setAuth, auth} = useDataContext();
-
   const androidPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -25,7 +22,7 @@ const HomeScreen = () => {
   }, []);
   return (
     <ScreenWrapper>
-      <View style={{height: Dimensions.get('window').height - 390}}>
+      <View style={{height: Dimensions.get('window').height - 410}}>
         <HomeMap />
       </View>
       <Message />

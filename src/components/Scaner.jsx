@@ -7,13 +7,16 @@ import {
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import * as Animatable from 'react-native-animatable';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RNCamera } from 'react-native-camera';
+import {useState} from 'react'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
 
+  const [flash,setFlash]=useState(0)
   // console.log(RNCamera.Constants.FlashMode.torch);
   // flashMode={RNCamera.Constants.FlashMode.torch}
   const makeSlideOutTranslation = (translationType, fromValue) => {
@@ -31,6 +34,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
     <>
       <QRCodeScanner
         showMarker
+        flashMode={flash}
         onRead={d => {
           setBarcode(d.data);
         }}
@@ -74,7 +78,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
         style={{
           width: '100%',
           backgroundColor: '#FFFFFF',
-          height: 100,
+          height: 70,
           position: 'absolute',
           bottom: 0,
           justifyContent: 'space-around',
@@ -84,28 +88,16 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
         }}>
 
 
-        <TouchableOpacity
-           onPress={() => {
-            setScanOneShow(false)
-            setBarcode('')
-          }}>
-          <Fontisto
-            name={'backward'}
-            size={25}
-            color="black"
-          />
-
-        </TouchableOpacity>
+      
 
         <TouchableOpacity
            onPress={() => {
-            setScanOneShow(false)
-            setBarcode('')
+            setFlash(pre=>pre===1?0:1)
           }}>
-          <Fontisto
-            name={'nav-icon-list'}
-            size={28}
-            color="black"
+          <MaterialCommunityIcons
+            name={flash===0?'flash':'flash-off'}
+            size={38}
+            color="#00CCBB"
           />
 
         </TouchableOpacity>
@@ -118,7 +110,7 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
           <Fontisto
             name={'forward'}
             size={25}
-            color="black"
+            color="#00CCBB"
           />
 
         </TouchableOpacity>

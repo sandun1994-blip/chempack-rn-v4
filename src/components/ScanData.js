@@ -5,13 +5,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  StatusBar,
   StyleSheet,
   TextInput,
   Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
 import {useDataContext} from '../hooks/hooks';
@@ -20,23 +18,14 @@ import Camera from './cards/Camera';
 
 const ScanData = ({
   getBarcodeData,
-  singedShow,
   refernceArray,
   setRefernceArray,
   setMainScanshow,
   references,
-  setReferences,
 }) => {
-  const {
-    refernceCode,
-    setRefernceCode,
-    refernceScanCode,
-    setRefernceScanCode,
-    setBarcode,
-    direction,
-    setDirection,
-  } = useDataContext();
-  const navigation = useNavigation();
+  const {refernceCode, setRefernceCode, setBarcode, direction} =
+    useDataContext();
+
   const [viewImage, setViewImage] = useState(false);
   const [camShow, setCamShow] = useState(false);
   const [secondMainScanshow, setSecondMainScanshow] = useState(false);

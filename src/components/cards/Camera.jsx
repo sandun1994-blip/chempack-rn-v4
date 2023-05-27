@@ -4,6 +4,7 @@ import uuid from 'react-native-uuid';
 import RNFS from 'react-native-fs';
 import {useCamera} from 'react-native-camera-hooks';
 import {RNCamera} from 'react-native-camera';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Camera = ({setImage, setCamShow}) => {
   const [{cameraRef}, {takePicture, pausePreview, resumePreview}] =
@@ -44,7 +45,11 @@ const Camera = ({setImage, setCamShow}) => {
       style={styles.preview}
       pausePreview={true}>
       <TouchableOpacity style={styles.button} onPress={capturedHandle}>
-        <Text style={styles.buttonText}>click</Text>
+      <MaterialCommunityIcons
+            name={'circle-slice-8'}
+            size={98}
+            color="#FFFFFF"
+          />
       </TouchableOpacity>
     </RNCamera>
   );
@@ -60,8 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 20,
     marginBottom: 50,

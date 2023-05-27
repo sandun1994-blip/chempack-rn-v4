@@ -1,7 +1,6 @@
 import React from "react";
 import {Pressable, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import {useNavigation} from "@react-navigation/native";
 import { useDataContext } from "../hooks/hooks";

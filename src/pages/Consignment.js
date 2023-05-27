@@ -1,12 +1,9 @@
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
-  ScrollView,
   TouchableOpacity,
   TextInput,
-  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import Scaner from '../components/Scaner';
@@ -14,7 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import axios from 'axios';
 import {useDataContext} from '../hooks/hooks';
 import ConsignmentCard from '../components/cards/ConsignmentCard';
-import Camera from '../components/cards/Camera';
+
 import FlashMessage, {
   showMessage,
   hideMessage,
@@ -24,11 +21,6 @@ const SCREEN_HEIGHT = Dimensions.get('window').height - 100;
 const Consignment = ({userLocation, navigation}) => {
   const {
     auth,
-    refernceCode,
-    setRefernceCode,
-    refernceScanCode,
-    setRefernceScanCode,
-    refernceScanCodeDisplay,
     setRefernceScanCodeDisplay,
     barcode,
     setBarcode,
@@ -40,10 +32,7 @@ const Consignment = ({userLocation, navigation}) => {
 
   const [scanOneShow, setScanOneShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [scanned, setScanned] = useState(false);
-
   const [mainScanerDisplay, setMainScanerDisplay] = useState(true);
-  const [sound, setSound] = useState();
   const [status, setStatus] = useState('A');
   const [rd, setRd] = useState('Start');
   const camera = useRef(null);
