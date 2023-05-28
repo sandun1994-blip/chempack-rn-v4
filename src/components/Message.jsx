@@ -6,7 +6,7 @@ export default function Message() {
     <View style={styles.container}>
       <Text style={styles.title} >Delivery </Text>
       <Text style={styles.text}>
-      Delivery service is moving  start to end, Touch Either Start Or End.
+      Delivery Service Is Moving  Start To End,You May Touch Either Start Or End.
       </Text>
       
     </View>
@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 10,
     },
-    text: {color: 'white', fontSize: 15, marginBottom: 10},
-    learnMore: {},
+    text: {color: 'white', fontSize: 15, marginBottom: 10,fontWeight:'600'},
+    
   });

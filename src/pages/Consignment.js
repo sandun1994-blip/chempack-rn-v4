@@ -8,7 +8,6 @@ import {
 import React, {useEffect, useState, useRef} from 'react';
 import Scaner from '../components/Scaner';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
 import {useDataContext} from '../hooks/hooks';
 import ConsignmentCard from '../components/cards/ConsignmentCard';
 
@@ -16,6 +15,8 @@ import FlashMessage, {
   showMessage,
   hideMessage,
 } from 'react-native-flash-message';
+import Loading from '../components/Loading';
+import axios from '../api/axios';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height - 100;
 const Consignment = ({userLocation, navigation}) => {
@@ -44,54 +45,60 @@ const Consignment = ({userLocation, navigation}) => {
   const [consignmentIndex, setConsignmentIndex] = useState(0);
   const [mainScanshow, setMainScanshow] = useState(true);
 
-  const getBarcodeDetails = async () => {
+  const getBarcodeDetails = async isMount => {
     setIsLoading(true);
     try {
-      const res = await axios.get(
-        `http://scan.chem-pack.com.au:3000/machship/searchConsignments/${barcode}`,
-        {
-          headers: {
-            'content-Type': 'application/json',
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
+      const res = await axios.get(`/machship/searchConsignments/${barcode}`, {
+        headers: {
+          'content-Type': 'application/json',
+          Authorization: `Bearer ${auth.accessToken}`,
         },
-      );
-
-      const referencesArray =
-        res.data?.object[0].consignmentItems[0]?.references.map(ref => {
-          if (ref === barcode) {
-            return {id: ref, selected: true};
-          }
-          return {id: ref, selected: false};
-        });
-
-      const findgetConsignmentId = referencesArray.findIndex(
-        ({id}) => id === barcode,
-      );
-      setConsignmentIndex(findgetConsignmentId + 1);
-      setRefernceScanCodeDisplay(true);
-      setReferences(referencesArray);
-      setRefernceArray(referencesArray);
-      const obj = res.data?.object[0];
-
-      setGetBarcodeData({
-        consignmentId: obj?.id,
-        toAddressLine1: obj?.toAddressLine1,
-        toAddressLine2: obj?.toAddressLine2,
-        qty: obj?.consignmentItems[0]?.quantity,
       });
-      setScanOneShow(false);
-      setMainScanshow(false)
+
+      if (isMount) {
+        const referencesArray =
+          res.data?.object[0].consignmentItems[0]?.references.map(ref => {
+            if (ref === barcode) {
+              return {id: ref, selected: true};
+            }
+            return {id: ref, selected: false};
+          });
+
+        const findgetConsignmentId = referencesArray.findIndex(
+          ({id}) => id === barcode,
+        );
+        setConsignmentIndex(findgetConsignmentId + 1);
+        setRefernceScanCodeDisplay(true);
+        setReferences(referencesArray);
+        setRefernceArray(referencesArray);
+        const obj = res.data?.object[0];
+
+        setGetBarcodeData({
+          consignmentId: obj?.id,
+          toAddressLine1: obj?.toAddressLine1,
+          toAddressLine2: obj?.toAddressLine2,
+          qty: obj?.consignmentItems[0]?.quantity,
+        });
+        setScanOneShow(false);
+        setMainScanshow(false);
+      }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (barcode.length > 0) {
-      getBarcodeDetails();
+    let isMount = true;
+    const controller = new AbortController();
+    if (barcode.length > 0 && isMount) {
+      getBarcodeDetails(isMount);
     }
+
+    return () => {
+      isMount = false;
+      controller.abort();
+    };
   }, [barcode]);
 
   return (
@@ -105,6 +112,7 @@ const Consignment = ({userLocation, navigation}) => {
           />
         </View>
       )}
+
       {/* {camShow && <Camera setCamShow={setCamShow} setImage={setImage} />} */}
       {!scanOneShow && mainScanshow && (
         <View className="bg-[#00CCBB]  pt-5 pb-5">
@@ -158,7 +166,7 @@ const Consignment = ({userLocation, navigation}) => {
           consignmentIndex={consignmentIndex}
         />
       )}
-
+      {isLoading && <Loading />}
       <FlashMessage position="bottom" />
     </>
   );
@@ -242,20 +250,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
-{
-  /* <QRCodeScanner
-onRead={data => {
-  setCode(data.data);
-}}
-fadeIn={true}
-reactivate={true}
-reactivateTimeout={1000}
-showMarker={true}
-containerStyle={styles.container}
-cameraContainerStyle={styles.cameraContainerStyle}
-cameraStyle={styles.cameraStyle}
-markerStyle={styles.markerStyle}
-/>
-<Text className="text-lg text-red-600">:{code}</Text> */
-}

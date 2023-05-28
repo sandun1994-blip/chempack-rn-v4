@@ -14,9 +14,9 @@ import {useState} from 'react'
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
-
-  const [flash,setFlash]=useState(0)
+const Scaner = ({  setBarcode, setScanOneShow }) => {
+  
+  const [flash,setFlash]=useState(RNCamera.Constants.FlashMode.off)
   // console.log(RNCamera.Constants.FlashMode.torch);
   // flashMode={RNCamera.Constants.FlashMode.torch}
   const makeSlideOutTranslation = (translationType, fromValue) => {
@@ -87,20 +87,30 @@ const Scaner = ({ barcode, setBarcode, setScanOneShow }) => {
 
         }}>
 
-
-      
-
+{flash===RNCamera.Constants.FlashMode.off?(
         <TouchableOpacity
            onPress={() => {
-            setFlash(pre=>pre===1?0:1)
+            setFlash(RNCamera.Constants.FlashMode.torch)
           }}>
           <MaterialCommunityIcons
-            name={flash===0?'flash':'flash-off'}
+            name={'flash'}
             size={38}
             color="#00CCBB"
           />
 
-        </TouchableOpacity>
+        </TouchableOpacity>):(<TouchableOpacity
+           onPress={() => {
+            setFlash(RNCamera.Constants.FlashMode.off)
+          }}>
+          <MaterialCommunityIcons
+            name={'flash-off'}
+            size={38}
+            color="#00CCBB"
+          />
+
+        </TouchableOpacity>)}
+      
+
 
         <TouchableOpacity
            onPress={() => {

@@ -21,6 +21,11 @@ const ContextProvider = ({ children }) => {
   const [barcode, setBarcode] = useState('');
   const [refernceArray, setRefernceArray] = useState([]);
   const [getBarcodeData, setGetBarcodeData] = useState({});
+  const [userlatitude,setUserlatitude] =useState(null)
+  const [userlongitude,setUserlongitude] =useState(null)
+  const [currentAddress,setCurrentAddress] =useState('')
+  const [userLocation,setUserLocation] =useState(null)
+
 
   const logout = () => {
     AsyncStorage.removeItem('userToken')
@@ -72,7 +77,10 @@ const ContextProvider = ({ children }) => {
       direction, setDirection, refernceCode, setRefernceCode,
       refernceScanCode, setRefernceScanCode, refernceScanCodeDisplay,
       setRefernceScanCodeDisplay, barcode, setBarcode, refernceArray,
-      setRefernceArray, getBarcodeData, setGetBarcodeData, logout, isLoadingTwo
+      setRefernceArray, getBarcodeData, setGetBarcodeData, logout, isLoadingTwo,
+      userlatitude,setUserlatitude,userlongitude,setUserlongitude,
+      currentAddress,setCurrentAddress,userLocation,setUserLocation
+      
     }}>
       {children}
     </Context.Provider>

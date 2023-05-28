@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {BASE_URL} from '@env';
 export default axios.create({
-  baseURL: 'http://10.0.2.2:3000',
+  baseURL: BASE_URL,
 });

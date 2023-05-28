@@ -1,9 +1,12 @@
-import React from "react";
-import {Pressable, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, { useEffect } from "react";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Entypo from "react-native-vector-icons/Entypo";
 import {useNavigation} from "@react-navigation/native";
 import { useDataContext } from "../hooks/hooks";
+
+
+
 
 export default function HomeSearch() {
 
@@ -14,6 +17,9 @@ export default function HomeSearch() {
     navigation.navigate("Scan");
     setDirection(dir)
   };
+
+
+
   return (
    
     <>

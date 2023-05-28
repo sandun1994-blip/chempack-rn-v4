@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import { useDataContext } from '../../hooks/hooks';
-import axios from 'axios'
 import ScanData from '../ScanData';
 
 
@@ -30,16 +29,9 @@ const requestStoragePermission = async () => {
 
 const ConsignmentCard = ({
   setMainScanshow,
-  barcode,
-  status,
-  userLocation,
-  showMessage,
   getBarcodeData,
   isLoading,
-  setIsLoading,
-  navigation,
   image,
-  signedBy,
   references,
   setReferences,
 }) => {
@@ -53,203 +45,12 @@ const ConsignmentCard = ({
 
 
   const {
-    direction,
-    auth,
-    setRefernceCode,
-    setRefernceScanCode,
-    setRefernceScanCodeDisplay,
     refernceArray,
     setRefernceArray,
   } = useDataContext();
 
-  const singedShow = direction === 'End' ? true : false;
-  const directionTitle = direction === 'End' ? 'END' : 'START';
 
 
-
-
-
-  const handleSubmit = async () => {
-    if (userLocation.length > 0 && signedBy != null && singedShow) {
-      setIsLoading(true);
-      try {
-        const response = await axios.post(
-          'consignmentroute',
-          JSON.stringify({
-            location: userLocation[0],
-            barcode,
-            locationDateTime: new Date(),
-            lastUpdated: new Date(),
-            lastUpdatedBy: auth.username,
-            status,
-            createdBy: auth.username,
-            routeDirection: direction,
-            signedBy: signedBy,
-            consignmentId: getBarcodeData.consignmentId,
-            qty: getBarcodeData.qty,
-            image: image?.base64,
-            reference: refernceArray,
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${auth.accessToken}`,
-            },
-          },
-        );
-        showMessage({
-          message: 'success',
-          type: 'success',
-          // backgroundColor: "red", // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          icon: 'success',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-        setTimeout(() => {
-          navigation.navigate('RouteDirection');
-          setRefernceCode(null);
-          setRefernceScanCode(false);
-          setRefernceScanCodeDisplay(false);
-          setRefernceArray([]);
-        }, 3000);
-      } catch (err) {
-        console.log(err);
-        showMessage({
-          message: 'error',
-          type: 'error',
-          backgroundColor: 'red', // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-      }
-      setIsLoading(false);
-    } else if (userLocation.length > 0 && signedBy === null && !singedShow) {
-      setIsLoading(true);
-      try {
-        const response = await axios.post(
-          'consignmentroute',
-          JSON.stringify({
-            location: userLocation[0],
-            barcode,
-            locationDateTime: new Date(),
-            lastUpdated: new Date(),
-            lastUpdatedBy: auth.username,
-            status,
-            createdBy: auth.username,
-            routeDirection: direction,
-            signedBy: signedBy,
-            consignmentId: getBarcodeData.consignmentId,
-            qty: getBarcodeData.qty,
-            reference: refernceArray,
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${auth.accessToken}`,
-            },
-          },
-        );
-        showMessage({
-          message: 'success',
-          type: 'success',
-          // backgroundColor: "red", // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          icon: 'success',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-        setTimeout(() => {
-          navigation.navigate('RouteDirection');
-          setRefernceCode(null);
-          setRefernceScanCode(false);
-          setRefernceScanCodeDisplay(false);
-          setRefernceArray([]);
-        }, 3000);
-      } catch (err) {
-        console.log(err);
-        showMessage({
-          message: 'error',
-          type: 'error',
-          backgroundColor: 'red', // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-      }
-      setIsLoading(false);
-    } else {
-      if (signedBy == null && singedShow) {
-        showMessage({
-          message: "Signed By Field Can't Be Empty",
-          type: 'serror',
-          backgroundColor: 'red', // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          icon: 'danger',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-      } else {
-        showMessage({
-          message: "Can't Track Location(On Location)",
-          type: 'serror',
-          backgroundColor: 'red', // background color
-          color: 'white',
-          animated: false,
-          position: 'center',
-          duration: 3500,
-          style: {
-            height: 70,
-            width: 340,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          titleStyle: { fontFamily: 'Teko', fontSize: 16 },
-        });
-      }
-    }
-  };
 
 
   return (
@@ -275,7 +76,6 @@ const ConsignmentCard = ({
         </View>
       )}
       <ScanData getBarcodeData={getBarcodeData}
-        singedShow={singedShow}
         refernceArray={refernceArray}
         setRefernceArray={setRefernceArray}
         image={image}

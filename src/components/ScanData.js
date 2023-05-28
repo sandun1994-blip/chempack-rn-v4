@@ -15,6 +15,12 @@ import CheckBox from '@react-native-community/checkbox';
 import {useDataContext} from '../hooks/hooks';
 import Scaner from './Scaner';
 import Camera from './cards/Camera';
+import axios from '../api/axios';
+import {showMessage} from 'react-native-flash-message';
+import {useNavigation} from '@react-navigation/native';
+import Geolocation from 'react-native-geolocation-service';
+import Geocoder from 'react-native-geocoding';
+import Loading from './Loading';
 
 const ScanData = ({
   getBarcodeData,
@@ -23,13 +29,275 @@ const ScanData = ({
   setMainScanshow,
   references,
 }) => {
-  const {refernceCode, setRefernceCode, setBarcode, direction} =
-    useDataContext();
+  const {
+    refernceCode,
+    setRefernceCode,
+    setBarcode,
+    direction,
+    userLocation,
+    auth,
+    barcode,
+    setUserLocation,
+  } = useDataContext();
 
+  const navigation = useNavigation();
   const [viewImage, setViewImage] = useState(false);
   const [camShow, setCamShow] = useState(false);
   const [secondMainScanshow, setSecondMainScanshow] = useState(false);
   const [image, setImage] = useState(null);
+  const [signedBy, setSignedBy] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState('A');
+
+  const signedShow = direction === 'End' ? true : false;
+  const directionTitle = direction === 'End' ? 'END' : 'START';
+
+  const getAllLocData = async (latitude, longitude) => {
+    try {
+      Geocoder.from({
+        latitude,
+        longitude,
+      }).then(res => {
+        setUserLocation({
+          streetAddress: res.results[0].address_components[1].long_name,
+          city: res.results[0].address_components[4].long_name,
+          country: res.results[0].address_components[5].long_name,
+          landmark: res.results[0].address_components[1].long_name,
+          postalCode: res.results[0].address_components[6].long_name,
+          address: res.results[0].formatted_address,
+          geometry: res.results[0].geometry.location,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getOneTimeLoc = () => {
+    try {
+      Geolocation.getCurrentPosition(
+        info => {
+          const {latitude, longitude} = info.coords;
+          getAllLocData(latitude, longitude);
+        },
+        error => console.log(error),
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 1000 * 60 * 3,
+          forceRequestLocation: true,
+          showLocationDialog: true,
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getOneTimeLoc();
+  }, []);
+
+  const handleSubmit = async () => {
+    if (userLocation && signedBy != null && signedShow && image) {
+      setIsLoading(true);
+      try {
+        await axios.post(
+          '/consignmentroute',
+          JSON.stringify({
+            location: userLocation,
+            barcode,
+            locationDateTime: new Date(),
+            lastUpdated: new Date(),
+            lastUpdatedBy: auth.username,
+            status,
+            createdBy: auth.username,
+            routeDirection: direction,
+            signedBy: signedBy,
+            consignmentId: getBarcodeData.consignmentId,
+            qty: getBarcodeData.qty,
+            image: image,
+            reference: refernceArray,
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${auth.accessToken}`,
+            },
+          },
+        );
+        showMessage({
+          message: 'success',
+          type: 'success',
+          backgroundColor: 'green',
+          color: 'white',
+          animated: false,
+          position: 'center',
+          icon: 'success',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+        setTimeout(() => {
+          setRefernceCode(null);
+          setRefernceArray([]);
+          setImage(null);
+          setBarcode('');
+          setMainScanshow(true);
+        }, 3000);
+      } catch (err) {
+        console.log(err);
+        showMessage({
+          message: 'error',
+          type: 'error',
+          backgroundColor: '#FF6666', // background color
+          color: 'white',
+          animated: false,
+          position: 'center',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+      }
+      setIsLoading(false);
+    } else if (userLocation && signedBy === null && !signedShow && image) {
+      setIsLoading(true);
+      try {
+        await axios.post(
+          '/consignmentroute',
+          JSON.stringify({
+            location: userLocation,
+            barcode,
+            locationDateTime: new Date(),
+            lastUpdated: new Date(),
+            lastUpdatedBy: auth.username,
+            status,
+            image,
+            createdBy: auth.username,
+            routeDirection: direction,
+            signedBy: signedBy,
+            consignmentId: getBarcodeData.consignmentId,
+            qty: getBarcodeData.qty,
+            reference: refernceArray,
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${auth.accessToken}`,
+            },
+          },
+        );
+        showMessage({
+          message: 'success',
+          type: 'success',
+          backgroundColor: 'green', // background color
+          color: 'white',
+          animated: false,
+          position: 'center',
+          icon: 'success',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontSize: 16, fontWeight: 'bold'},
+        });
+        setTimeout(() => {
+          // navigation.navigate('Home');
+          setRefernceCode(null);
+          setRefernceArray([]);
+          setImage(null);
+          setBarcode('');
+          setMainScanshow(true);
+        }, 3000);
+      } catch (err) {
+        console.log(err);
+        showMessage({
+          message: 'Intenal Error (Restart App) ',
+          type: 'error',
+          backgroundColor: '#FF6666', // background color
+          color: 'white',
+          animated: false,
+          position: 'center',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+      }
+      setIsLoading(false);
+    } else {
+      if (signedBy == null && signedShow) {
+        showMessage({
+          message: "Signed By Field Can't Be Empty",
+          type: 'error',
+          backgroundColor: '#FF6666', // background color
+          color: 'white',
+          animated: false,
+          position: 'center',
+          icon: 'danger',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+      } else if (image === null) {
+        showMessage({
+          message: 'Take a Picture(Touch camera icon)',
+          type: 'error',
+          backgroundColor: '#FF6666', // background color
+          color: 'white',
+          animated: true,
+          position: 'center',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+      } else {
+        showMessage({
+          message: "Can't Track Location(On Location)",
+          type: 'error',
+          backgroundColor: '#FF6666', // background color
+          color: 'white',
+          animated: false,
+          position: 'center',
+          duration: 3500,
+          style: {
+            height: 70,
+            width: 340,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          titleStyle: {fontWeight: 'bold', fontSize: 16},
+        });
+      }
+    }
+  };
 
   const onChangeValue = (item, index) => {
     const newData = refernceArray.map(newItem => {
@@ -44,23 +312,31 @@ const ScanData = ({
     setRefernceArray(newData);
   };
 
-  const handleRefernceScanned = () => {
-    if (references.filter(({id}) => id === refernceCode).length === 1) {
-      setRefernceArray(prev =>
-        prev.map(item => {
-          if (item.id === refernceCode) {
-            return {id: refernceCode, selected: true};
-          }
-          return item;
-        }),
-      );
+  const handleRefernceScanned = isMount => {
+    if (isMount) {
+      if (references.filter(({id}) => id === refernceCode).length === 1) {
+        setRefernceArray(prev =>
+          prev.map(item => {
+            if (item.id === refernceCode) {
+              return {id: refernceCode, selected: true};
+            }
+            return item;
+          }),
+        );
+      }
     }
+    setSecondMainScanshow(false);
   };
   useEffect(() => {
+    let isMount = true;
     if (refernceCode?.length > 0) {
-      handleRefernceScanned();
+      handleRefernceScanned(isMount);
     }
+    return () => {
+      isMount = false;
+    };
   }, [refernceCode]);
+
   return (
     <>
       {!refernceCode && secondMainScanshow && (
@@ -181,7 +457,7 @@ const ScanData = ({
             <View className="pl-2 pr-2 pb-3 bg-white mt-0 space-y-1">
               {image && (
                 <Modal visible={viewImage} animationType="slide">
-                  <View className="flex-1 bg-[#00CCBB] justify-center items-center">
+                  <View className="flex-1 bg-[#00CCBB] justify-center items-center p-5">
                     <TouchableOpacity
                       className="rounded-full bg-gray-100 absolute  top-3 right-5"
                       onPress={() => {
@@ -194,21 +470,21 @@ const ScanData = ({
                       />
                     </TouchableOpacity>
                     <Image
-                      source={{uri: 'data:image/jpg;base64,' + image.base64}}
-                      className="h-40 w-40  rounded-md "
+                      source={{uri: 'data:image/jpg;base64,' + image}}
+                      className="h-3/4 w-full  rounded-md "
                     />
                   </View>
                 </Modal>
               )}
-              <View className="flex flex-row items-center justify-between bg-[#00CCBB] p-2 rounded-lg">
+              <View className="flex flex-row items-center justify-between  p-2 rounded-lg">
                 {image && (
-                  <View className=" rounded-lg">
+                  <View className=" rounded-lg border-2 border-[#00CCBB]">
                     <TouchableOpacity
                       onPress={() => {
                         setViewImage(pre => !pre);
                       }}>
                       <Image
-                        source={{uri: 'data:image/jpg;base64,' + image.base64}}
+                        source={{uri: 'data:image/jpg;base64,' + image}}
                         className="h-16 w-20  rounded-md "
                       />
                     </TouchableOpacity>
@@ -219,17 +495,23 @@ const ScanData = ({
                   <TextInput
                     placeholder="Signed By"
                     style={styles.signTextBox}
-                    onChangeText={e => setRefernceCode(e)}
-                    value={refernceCode}
+                    onChangeText={e => setSignedBy(e)}
+                    value={signedBy}
                   />
                 )}
               </View>
 
-              <TouchableOpacity className="rounded-lg bg-[#00CCBB] p-5 ">
-                <Text className="text-center text-white text-[25px] font-bold">
-                  {direction}
-                </Text>
-              </TouchableOpacity>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <TouchableOpacity
+                  className="rounded-lg bg-[#00CCBB] p-5 "
+                  onPress={handleSubmit}>
+                  <Text className="text-center text-white text-[25px] font-bold">
+                    {directionTitle}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </SafeAreaView>
@@ -260,7 +542,7 @@ const styles = StyleSheet.create({
   signTextBox: {
     height: 50,
     width: '60%',
-    borderColor: 'white',
+    borderColor: '#00CCBB',
     backgroundColor: 'white',
     borderWidth: 1,
     color: 'black',

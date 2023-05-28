@@ -7,26 +7,22 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import Snackbar from 'react-native-snackbar';
-import ScreenWrapper from '../components/ScreenWrapper';
 import {colors} from '../theme';
-import BackButton from '../components/BackButton';
 import Loading from '../components/Loading';
 import {useDataContext} from '../hooks/hooks';
 import axios from '../api/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignInScreen({navigation}) {
-  const {auth, setAuth, setIsLoading, setUserToken} = useDataContext();
+  const {setAuth} = useDataContext();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [userLoading, setuUerLoading] = useState(false);
+  const [userLoading, setUerLoading] = useState(false);
   // const navigation = useNavigation();
 
   const handleSubmit = async () => {
-    setIsLoading(false);
+    setUerLoading(true);
     try {
       const response = await axios.post(
         '/authentication/login',
@@ -42,7 +38,7 @@ export default function SignInScreen({navigation}) {
       const refreshToken = response?.data.token;
 
       setAuth({username, password, accessToken, refreshToken});
-      // console.log(accessToken);
+
       if (accessToken) {
         await AsyncStorage.setItem('userToken', accessToken);
         await AsyncStorage.setItem('username', username);
@@ -53,19 +49,19 @@ export default function SignInScreen({navigation}) {
         {text: 'Okay'},
       ]);
     }
-    setIsLoading(true);
+    setUerLoading(false);
   };
 
   return (
-    <View className="flex justify-between  mx-4" style={{flex: 1}}>
-      <View style={{flex: 1}}>
-        <View className="flex-row justify-center my-3 mt-5" style={{flex: 1}}>
+    <View className="flex flex-1 justify-between  mx-4">
+      <View className="flex-1">
+        <View className="flex-row justify-center my-3 mt-5 flex-1">
           <Image
             className="h-60 w-80"
             source={require('../../assets/images/login.png')}
           />
         </View>
-        <View className="space-y-2 mx-2" style={{flex: 1}}>
+        <View className="space-y-2 mx-2 flex-1">
           <Text className={`${colors.heading} text-lg font-bold`}>
             User Name
           </Text>
